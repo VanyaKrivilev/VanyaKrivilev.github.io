@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Help chat</title>
 	<link rel="stylesheet" href="chat-form.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 	<div class="chat-form-wrap">
@@ -14,8 +15,8 @@
 				<div class="bot-answer">Привет! Я Бот</div>
 			</div>
 			<div class="form-group">
-				<input type="text" class="question-field" id="question" required placeholder="Question">
-				<div class="request-send">
+				<input type="text" class="question-field" name="question" id="question" required placeholder="Question">
+				<div class="request-send js--request-send">
 					<img src="Invitations.svg" class="request-send-btn">
 				</div>
 			</div>
@@ -26,5 +27,45 @@
 			</div>
 		</form>
 	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var url = 'https://e94eb52f.ngrok.io',
+				form = $('#chat-form'),
+				btnSend = $('.js--request-send'),
+				chat = $('.chat-window');
+
+			btnSend.unbind('click').on('click', function (e) {
+
+				//забираем значение инпута и кидаем ajax
+				var question = $('input[name="question"]').val();
+
+				//пихаем вопрос пользователя в чат
+				chat.append('<div class="user-question">'+question+'</div>');
+				//обнуляем поле ввода и блокируем возможность отправки до ответа бота
+				blockRequestField();
+
+				$.ajax({
+					dataType: "json",
+					url: url,
+					data: question,
+					success: {
+						function(){
+							console.log('ура ответ на вопрос:' + question + ' получен!');
+						}
+					}
+				});
+
+
+
+
+				e.preventDefault();
+			});
+
+			function blockRequestField() {
+
+			}
+		});
+	</script>
 </body>
 </html>
