@@ -3,16 +3,28 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Help chat</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="chat-form.css">
 </head>
 <body>
-	<h1>Что вас интересует?</h1>
-	<form>
-		<div class="form-group">
-			<input type="text" class="form-control" id="question" required placeholder="Question">
-		</div>
+	<div class="chat-form-wrap">
+		<div class="chat-form__title">Hi! How can i help you?</div>
+		<form id="chat-form">
+			<div class="chat-window">
+				<div class="user-question">Привет</div>
+				<div class="bot-answer">Привет! Я Бот</div>
+			</div>
+			<div class="form-group">
+				<input type="text" class="question-field" id="question" required placeholder="Question">
+				<div class="request-send">
+					<img src="Invitations.svg" class="request-send-btn">
+				</div>
+			</div>
 
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
+			<div class="chat-form__btn-group">
+				<a href="#" class="btn chat-form__btn-success">Success</a>
+				<a href="#" class="btn chat-form__btn-fail">Contact Support</a>
+			</div>
+		</form>
+	</div>
 </body>
 </html>
