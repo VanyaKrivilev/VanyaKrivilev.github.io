@@ -4,6 +4,10 @@ body {
 	line-height: 24px;
 }
 
+a {
+	color: #3f53d9;
+}
+
 .chat-form-wrap {
 	max-width: 440px;
 	margin: 0 auto;
@@ -105,4 +109,9 @@ body {
 	width: 20px;
 	height: 20px;
 	margin-bottom: -5px;
+}
+
+.disabled {
+	pointer-events: none;
+	cursor: default;
 }

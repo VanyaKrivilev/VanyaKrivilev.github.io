@@ -81,7 +81,6 @@
 
 						},
 						error: function (jxhr, status, err) {
-							console.log(err);
 							failResponseAction(err);
 						}
 					});
@@ -107,18 +106,46 @@
 
 			//ответ без ошибок
 			function responseAction(json_callback) {
-				console.log(json_callback);
 				//собираем ответ бота
 				if(json_callback.support){
-					chat.append('<div class="bot-answer">'+ json_callback.response + ' ' +'<a href="#" class="bot-answer-support-btn">Ok, create ticket</a></div>');
+					chat.append('<div class="bot-answer">'+ json_callback.response + ' ' +'<a href="#" class="bot-answer-support-btn js--support-btn">Ok, create ticket</a></div>');
 				} else {
 					chat.append('<div class="bot-answer">' + json_callback.response + '</div>');
 				}
+
+				//эвент на нажатие Ok, create ticket
+				$('.js--support-btn').unbind('click').on('click', function (e) {
+
+					//заглушка на создание тикета
+					blockRequestField(form);
+					setTimeout(drawTicket, 1000);
+
+					e.preventDefault();
+				});
 
 				//скролим окно чтобы было видно последний блок
 				scrollingChat(chat);
 
 				unBlockRequestField(form);
+			}
+
+			function drawTicket() {
+				var ticketNumber = ticketNumberGenerator(195000, 300000),
+					ticketNumberString = 'Ticket #' + ticketNumber;
+
+				chat.append('<div class="bot-answer">' + ticketNumberString + '</div>');
+
+				//удаляем ссылку на создание тикета
+				$('.js--support-btn').addClass('disabled');
+
+				unBlockRequestField(form);
+			}
+			
+			function ticketNumberGenerator(min, max) {
+				var min = Math.ceil(min);
+				var max = Math.floor(max);
+
+				return Math.floor(Math.random() * (max - min)) + min;
 			}
 
 			//ответ - ошибка
