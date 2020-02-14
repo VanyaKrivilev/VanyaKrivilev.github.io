@@ -19,7 +19,7 @@ body {
 
 .chat-form__btn-group {
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
 }
 
 .btn {
@@ -87,4 +87,10 @@ body {
 
 .error {
 	color: #f16767;
+}
+
+.error-disappointed-icon {
+	width: 20px;
+	height: 20px;
+	margin-bottom: -5px;
 }

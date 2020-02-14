@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Help chat</title>
+	<link rel="stylesheet" type="text/css" href="https://miro.com/app/static/styles.1.0.css"/>
 	<link rel="stylesheet" href="styles/chat-form.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
@@ -16,7 +17,7 @@
 				<div class="bot-answer">Привет! Я Бот</div>
 			</div>
 			<div class="form-group js--form-group">
-				<input type="text" class="question-field" name="question" id="question" required placeholder="Question">
+				<input type="text" class="miro-input miro-input--primary question-field" name="question" id="question" required placeholder="Question">
 				<div class="request-send js--request-send">
 					<img src="imgs/Invitations.svg" class="request-send-btn">
 				</div>
@@ -26,8 +27,12 @@
 			</div>
 
 			<div class="chat-form__btn-group">
-				<a href="#" class="btn chat-form__btn-success">Success</a>
-				<a href="#" class="btn chat-form__btn-fail">Contact Support</a>
+				<a href="#" class="btn chat-form__btn-success">
+					<img src="imgs/like.svg" class="chat-form__btn-success-icon">
+				</a>
+				<a href="#" class="btn chat-form__btn-fail">
+					<img src="imgs/like.svg" class="chat-form__btn-success-icon">
+				</a>
 			</div>
 		</form>
 	</div>
@@ -92,7 +97,7 @@
 				console.log(json_callback);
 				//собираем ответ бота
 				if(json_callback.support){
-					chat.append('<div class="bot-answer">Я не знаю - спроси у <a href="#" class="bot-answer-support-btn">Support</a></div>');
+					chat.append('<div class="bot-answer">Ohhh. I cannot understand what you want. Could you ask <a href="#" class="bot-answer-support-btn">Support</a>?</div>');
 				} else {
 					chat.append('<div class="bot-answer">' + json_callback.response + '</div>');
 				}
@@ -106,7 +111,7 @@
 			//ответ - ошибка
 			function failResponseAction(err) {
 				if(err) {
-					chat.append('<div class="bot-answer error">Нет смысла в том, в чем нет смысла :P</div>');
+					chat.append('<div class="bot-answer error">Internal server error. Something went wrong <img src="imgs/disappointed.svg" class="error-disappointed-icon"> We notified administrator</div>');
 				}
 
 				scrollingChat(chat);
@@ -115,11 +120,14 @@
 			}
 
 			function scrollingChat(chat) {
-				//высота последнего добавленного блока
-				var h_block = parseInt(chat.find('div').last().height()) + 10;
+				var h_chat = 0;
+				//высота блоков
+				chat.find('div').each(function () {
+					h_chat += parseInt($(this).height());
+				});
 
 				chat.animate({
-					scrollTop: h_block
+					scrollTop: h_chat
 				}, 300);
 			}
 		});
