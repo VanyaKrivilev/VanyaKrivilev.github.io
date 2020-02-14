@@ -131,9 +131,9 @@
 
 			function drawTicket() {
 				var ticketNumber = ticketNumberGenerator(195000, 300000),
-					ticketNumberString = 'Ticket #' + ticketNumber;
+					ticketNumberString = '<strong>Ticket #' + ticketNumber + '</strong>';
 
-				chat.append('<div class="bot-answer">' + ticketNumberString + '</div>');
+				chat.append('<div class="bot-answer">Ok. Your ticket number is: ' + ticketNumberString + ' Our support team will contact with you as soon as possible</div>');
 
 				scrollingChat(chat);
 
