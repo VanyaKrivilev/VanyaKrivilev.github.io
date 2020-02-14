@@ -46,8 +46,14 @@ a {
 }
 
 .bot-answer {
+	position: relative;
 	padding-left: 20px;
 	margin-bottom: 10px;
+}
+
+.robot {
+	position: absolute;
+	left: -2px;
 }
 
 .form-group {
@@ -99,10 +105,6 @@ a {
 
 .form-group.disabled .request-send-loader {
 	display: block;
-}
-
-.error {
-	color: #f16767;
 }
 
 .error-disappointed-icon {
