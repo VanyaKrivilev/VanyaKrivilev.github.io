@@ -1,5 +1,7 @@
 # Создание Web-Plugin для доски Miro
 
+[Документация](https://developers.miro.com/docs)
+
 ## Задача:
 
 ![Задача](https://vanyakrivilev.github.io/imgs/hack_ml-bot_goal.png "Задача")
