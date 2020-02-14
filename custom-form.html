@@ -21,19 +21,10 @@
 				<input type="text" class="miro-input miro-input--primary question-field" name="question" id="question" required placeholder="Question" autocomplete="off">
 
 				<a class="miro-btn miro-btn--primary miro-btn--medium request-send js--request-send">
-					<span>Send</span>
+					<span class="request-send-btn-name">Send</span>
 					<span class="request-send-loader js--request-send-loader"><img src="imgs/Double%20Ring-1s-200px.gif"></span>
 				</a>
 			</div>
-
-<!--			<div class="chat-form__btn-group">-->
-<!--				<a href="#" class="btn chat-form__btn-success">-->
-<!--					<img src="imgs/like.svg" class="chat-form__btn-success-icon">-->
-<!--				</a>-->
-<!--				<a href="#" class="btn chat-form__btn-fail">-->
-<!--					<img src="imgs/like.svg" class="chat-form__btn-success-icon">-->
-<!--				</a>-->
-<!--			</div>-->
 		</form>
 	</div>
 
@@ -69,12 +60,11 @@
 				//забираем значение инпута и кидаем ajax
 				var question = $('input[name="question"]').val();
 
-				//пихаем вопрос пользователя в чат
-				chat.append('<div class="user-question">' + question + '</div>');
-				scrollingChat(chat);
-
 				if(question) {
-					console.log(question);
+					//пихаем вопрос пользователя в чат
+					chat.append('<div class="user-question">' + question + '</div>');
+					scrollingChat(chat);
+
 					clearRequestField(form);
 
 					$.ajax({
@@ -102,14 +92,12 @@
 
 			function blockRequestField(form) {
 				//блокируем поле ввода и отправки сообщения
-				// form.find('.js--form-group').addClass('disabled');
-				// form.find('.js--request-send').prop('disabled', 'disabled');
+				form.find('.js--form-group').addClass('disabled');
 
 			}
 
 			function unBlockRequestField(form) {
-				// form.find('.js--form-group').removeClass('disabled');
-				// form.find('.js--request-send').removeAttr("disabled");
+				form.find('.js--form-group').removeClass('disabled');
 			}
 
 			function clearRequestField(form) {
@@ -130,7 +118,7 @@
 				//скролим окно чтобы было видно последний блок
 				scrollingChat(chat);
 
-				// unBlockRequestField(form);
+				unBlockRequestField(form);
 			}
 
 			//ответ - ошибка
