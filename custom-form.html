@@ -10,27 +10,30 @@
 </head>
 <body>
 	<div class="chat-form-wrap">
-		<div class="miro-h3 chat-form__title">Hi! How can i help you?</div>
+		<div class="miro-h3 chat-form__title">Support Friendly Bot<span class="chat-form__title-icon">
+			<img src="imgs/bot.svg">
+		</span></div>
 		<form id="chat-form">
 			<div class="chat-window">
-				<div class="user-question">Привет</div>
-				<div class="bot-answer">Привет! Я Бот</div>
+				<div class="bot-answer">Hi there. How can I help?</div>
 			</div>
 			<div class="form-group js--form-group">
 				<input type="text" class="miro-input miro-input--primary question-field" name="question" id="question" required placeholder="Question" autocomplete="off">
-				<div class="request-send-loader js--request-send-loader">
-					<img src="imgs/Double%20Ring-1s-200px.gif">
-				</div>
+
+				<a class="miro-btn miro-btn--primary miro-btn--medium request-send js--request-send">
+					<span>Send</span>
+					<span class="request-send-loader js--request-send-loader"><img src="imgs/Double%20Ring-1s-200px.gif"></span>
+				</a>
 			</div>
 
-			<div class="chat-form__btn-group">
-				<a href="#" class="btn chat-form__btn-success">
-					<img src="imgs/like.svg" class="chat-form__btn-success-icon">
-				</a>
-				<a href="#" class="btn chat-form__btn-fail">
-					<img src="imgs/like.svg" class="chat-form__btn-success-icon">
-				</a>
-			</div>
+<!--			<div class="chat-form__btn-group">-->
+<!--				<a href="#" class="btn chat-form__btn-success">-->
+<!--					<img src="imgs/like.svg" class="chat-form__btn-success-icon">-->
+<!--				</a>-->
+<!--				<a href="#" class="btn chat-form__btn-fail">-->
+<!--					<img src="imgs/like.svg" class="chat-form__btn-success-icon">-->
+<!--				</a>-->
+<!--			</div>-->
 		</form>
 	</div>
 
@@ -41,55 +44,77 @@
 				btnSend = $('.js--request-send'),
 				chat = $('.chat-window');
 
+			//слушаем input
 			document.querySelector('input').addEventListener('keydown', function(e) {
 				//слушаем Enter
 				if (e.keyCode === 13) {
+					blockRequestField(form);
 
-					//забираем значение инпута и кидаем ajax
-					var question = $('input[name="question"]').val();
-
-					//пихаем вопрос пользователя в чат
-					chat.append('<div class="user-question">' + question + '</div>');
-					scrollingChat(chat);
-
-					if(question) {
-						//обнуляем поле ввода и блокируем возможность отправки до ответа бота
-						blockRequestField(form);
-
-						$.ajax({
-							url : url + '/?question=' + question,
-							type : "GET",
-							dataType : "jsonp",
-							crossDomain: true,
-							jsonpCallback: 'json_callback',
-							data: {
-								question: question
-							},
-							success: function(json_callback){
-								responseAction(json_callback);
-
-							},
-							error: function (jxhr, status, err) {
-								console.log(err);
-								failResponseAction(err);
-
-							}
-						});
-					}
+					actionForm();
 
 					e.preventDefault();
 				}
 			});
 
+			//слушаем нажатие по кнопке
+			btnSend.unbind('click').on('click', function (e) {
+				blockRequestField(form);
+
+				actionForm();
+
+				e.preventDefault();
+			});
+
+			function actionForm() {
+				//забираем значение инпута и кидаем ajax
+				var question = $('input[name="question"]').val();
+
+				//пихаем вопрос пользователя в чат
+				chat.append('<div class="user-question">' + question + '</div>');
+				scrollingChat(chat);
+
+				if(question) {
+					console.log(question);
+					clearRequestField(form);
+
+					$.ajax({
+						url : url + '/?question=' + question,
+						type : "GET",
+						dataType : "jsonp",
+						crossDomain: true,
+						jsonpCallback: 'json_callback',
+						data: {
+							question: question
+						},
+						success: function(json_callback){
+							responseAction(json_callback);
+
+						},
+						error: function (jxhr, status, err) {
+							console.log(err);
+							failResponseAction(err);
+						}
+					});
+				} else {
+					unBlockRequestField(form);
+				}
+			}
+
 			function blockRequestField(form) {
-				//очищаем поле ввода
-				form.find('input[name="question"]').val('');
 				//блокируем поле ввода и отправки сообщения
-				form.find('.js--form-group').addClass('disabled');
+				// form.find('.js--form-group').addClass('disabled');
+				// form.find('.js--request-send').prop('disabled', 'disabled');
+
 			}
 
 			function unBlockRequestField(form) {
-				form.find('.js--form-group').removeClass('disabled');
+				// form.find('.js--form-group').removeClass('disabled');
+				// form.find('.js--request-send').removeAttr("disabled");
+			}
+
+			function clearRequestField(form) {
+				//очищаем поле ввода
+				form.find('input[name="question"]').val('');
 			}
 
 			//ответ без ошибок
@@ -97,7 +122,7 @@
 				console.log(json_callback);
 				//собираем ответ бота
 				if(json_callback.support){
-					chat.append('<div class="bot-answer">Ohhh. I cannot understand what you want. Could you ask <a href="#" class="bot-answer-support-btn">Support</a>?</div>');
+					chat.append('<div class="bot-answer">'+ json_callback.response + ' ' +'<a href="#" class="bot-answer-support-btn">Ok, create ticket</a></div>');
 				} else {
 					chat.append('<div class="bot-answer">' + json_callback.response + '</div>');
 				}
@@ -105,7 +130,7 @@
 				//скролим окно чтобы было видно последний блок
 				scrollingChat(chat);
 
-				unBlockRequestField(form);
+				// unBlockRequestField(form);
 			}
 
 			//ответ - ошибка
