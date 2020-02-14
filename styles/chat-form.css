@@ -16,7 +16,15 @@ a {
 }
 
 .chat-form__title {
+	position: relative;
 	margin-bottom: 20px;
+}
+
+.chat-form__title-icon {
+	display: block;
+	position: absolute;
+	top: -3px;
+	left: 203px;
 }
 
 .chat-form__btn-group {
