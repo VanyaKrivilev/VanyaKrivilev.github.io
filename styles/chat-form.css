@@ -12,7 +12,6 @@ body {
 }
 
 .chat-form__title {
-	opacity: 0.4;
 	margin-bottom: 20px;
 }
 
@@ -27,10 +26,10 @@ body {
 
 .chat-window {
 	padding: 10px;
-	border: 1px solid #999;
+	border: 1px solid #050038;
 	border-radius: 5px;
 	margin-bottom: 10px;
-	height: 150px;
+	height: 450px;
 	overflow-y: auto;
 }
 
