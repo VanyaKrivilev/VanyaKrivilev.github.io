@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Help chat</title>
-	<link rel="stylesheet" href="chat-form.css">
+	<link rel="stylesheet" href="styles/chat-form.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
@@ -14,10 +14,13 @@
 				<div class="user-question">Привет</div>
 				<div class="bot-answer">Привет! Я Бот</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group js--form-group">
 				<input type="text" class="question-field" name="question" id="question" required placeholder="Question">
 				<div class="request-send js--request-send">
-					<img src="Invitations.svg" class="request-send-btn">
+					<img src="imgs/Invitations.svg" class="request-send-btn">
+				</div>
+				<div class="request-send-loader js--request-send-loader">
+					<img src="imgs/Double%20Ring-1s-200px.gif">
 				</div>
 			</div>
 
@@ -30,7 +33,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function () {
-			var url = 'https://e94eb52f.ngrok.io',
+			var url = 'http://c7a0bbf3.ngrok.io',
 				form = $('#chat-form'),
 				btnSend = $('.js--request-send'),
 				chat = $('.chat-window');
@@ -42,28 +45,43 @@
 
 				//пихаем вопрос пользователя в чат
 				chat.append('<div class="user-question">'+question+'</div>');
-				//обнуляем поле ввода и блокируем возможность отправки до ответа бота
-				blockRequestField();
 
-				$.ajax({
-					dataType: "json",
-					url: url,
-					data: question,
-					success: {
-						function(){
-							console.log('ура ответ на вопрос:' + question + ' получен!');
+				if(question) {
+					//обнуляем поле ввода и блокируем возможность отправки до ответа бота
+					blockRequestField(form);
+
+					$.ajax({
+						url : url + '/?question=' + question,
+						type : "GET",
+						dataType : "jsonp",
+						crossDomain: true,
+						jsonpCallback: 'json_callback',
+						data: {
+							question: question
+						},
+						success: function(json_callback){
+							console.log(json_callback);
+							unBlockRequestField(form);
+						},
+						error: function (jxhr, status, err) {
+							console.log(status, err);
+							unBlockRequestField(form);
 						}
-					}
-				});
-
-
-
+					});
+				}
 
 				e.preventDefault();
 			});
 
-			function blockRequestField() {
+			function blockRequestField(form) {
+				//очищаем поле ввода
+				form.find('input[name="question"]').val('');
+				//блокируем поле ввода и отправки сообщения
+				form.find('.js--form-group').addClass('disabled');
+			}
 
+			function unBlockRequestField(form) {
+				form.find('.js--form-group').removeClass('disabled');
 			}
 		});
 	</script>
