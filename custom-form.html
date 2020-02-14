@@ -17,10 +17,7 @@
 				<div class="bot-answer">Привет! Я Бот</div>
 			</div>
 			<div class="form-group js--form-group">
-				<input type="text" class="miro-input miro-input--primary question-field" name="question" id="question" required placeholder="Question">
-				<div class="request-send js--request-send">
-					<img src="imgs/Invitations.svg" class="request-send-btn">
-				</div>
+				<input type="text" class="miro-input miro-input--primary question-field" name="question" id="question" required placeholder="Question" autocomplete="off">
 				<div class="request-send-loader js--request-send-loader">
 					<img src="imgs/Double%20Ring-1s-200px.gif">
 				</div>
@@ -44,41 +41,44 @@
 				btnSend = $('.js--request-send'),
 				chat = $('.chat-window');
 
-			btnSend.unbind('click').on('click', function (e) {
+			document.querySelector('input').addEventListener('keydown', function(e) {
+				//слушаем Enter
+				if (e.keyCode === 13) {
 
-				//забираем значение инпута и кидаем ajax
-				var question = $('input[name="question"]').val();
+					//забираем значение инпута и кидаем ajax
+					var question = $('input[name="question"]').val();
 
-				//пихаем вопрос пользователя в чат
-				chat.append('<div class="user-question">' + question + '</div>');
-				scrollingChat(chat);
+					//пихаем вопрос пользователя в чат
+					chat.append('<div class="user-question">' + question + '</div>');
+					scrollingChat(chat);
 
-				if(question) {
-					//обнуляем поле ввода и блокируем возможность отправки до ответа бота
-					blockRequestField(form);
+					if(question) {
+						//обнуляем поле ввода и блокируем возможность отправки до ответа бота
+						blockRequestField(form);
 
-					$.ajax({
-						url : url + '/?question=' + question,
-						type : "GET",
-						dataType : "jsonp",
-						crossDomain: true,
-						jsonpCallback: 'json_callback',
-						data: {
-							question: question
-						},
-						success: function(json_callback){
-							responseAction(json_callback);
+						$.ajax({
+							url : url + '/?question=' + question,
+							type : "GET",
+							dataType : "jsonp",
+							crossDomain: true,
+							jsonpCallback: 'json_callback',
+							data: {
+								question: question
+							},
+							success: function(json_callback){
+								responseAction(json_callback);
 
-						},
-						error: function (jxhr, status, err) {
-							console.log(err);
-							failResponseAction(err);
+							},
+							error: function (jxhr, status, err) {
+								console.log(err);
+								failResponseAction(err);
 
-						}
-					});
+							}
+						});
+					}
+
+					e.preventDefault();
 				}
-
-				e.preventDefault();
 			});
 
 			function blockRequestField(form) {
