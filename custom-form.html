@@ -10,6 +10,7 @@
 	<div class="chat-form-wrap">
 		<div class="chat-form__title">Hi! How can i help you?</div>
 		<form id="chat-form">
+			<div class="chat-point"></div>
 			<div class="chat-window">
 				<div class="user-question">Привет</div>
 				<div class="bot-answer">Привет! Я Бот</div>
@@ -33,7 +34,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function () {
-			var url = 'https://c7a0bbf3.ngrok.io',
+			var url = 'https://ac6da8fe.ngrok.io',
 				form = $('#chat-form'),
 				btnSend = $('.js--request-send'),
 				chat = $('.chat-window');
@@ -44,7 +45,8 @@
 				var question = $('input[name="question"]').val();
 
 				//пихаем вопрос пользователя в чат
-				chat.append('<div class="user-question">'+question+'</div>');
+				chat.append('<div class="user-question">' + question + '</div>');
+				scrollingChat(chat);
 
 				if(question) {
 					//обнуляем поле ввода и блокируем возможность отправки до ответа бота
@@ -60,12 +62,13 @@
 							question: question
 						},
 						success: function(json_callback){
-							console.log(json_callback);
-							unBlockRequestField(form);
+							responseAction(json_callback);
+
 						},
 						error: function (jxhr, status, err) {
-							console.log(status, err);
-							unBlockRequestField(form);
+							console.log(err);
+							failResponseAction(err);
+
 						}
 					});
 				}
@@ -82,6 +85,42 @@
 
 			function unBlockRequestField(form) {
 				form.find('.js--form-group').removeClass('disabled');
+			}
+
+			//ответ без ошибок
+			function responseAction(json_callback) {
+				console.log(json_callback);
+				//собираем ответ бота
+				if(json_callback.support){
+					chat.append('<div class="bot-answer">Я не знаю - спроси у <a href="#" class="bot-answer-support-btn">Support</a></div>');
+				} else {
+					chat.append('<div class="bot-answer">' + json_callback.response + '</div>');
+				}
+
+				//скролим окно чтобы было видно последний блок
+				scrollingChat(chat);
+
+				unBlockRequestField(form);
+			}
+
+			//ответ - ошибка
+			function failResponseAction(err) {
+				if(err) {
+					chat.append('<div class="bot-answer error">Нет смысла в том, в чем нет смысла :P</div>');
+				}
+
+				scrollingChat(chat);
+
+				unBlockRequestField(form);
+			}
+
+			function scrollingChat(chat) {
+				//высота последнего добавленного блока
+				var h_block = parseInt(chat.find('div').last().height()) + 10;
+
+				chat.animate({
+					scrollTop: h_block
+				}, 300);
 			}
 		});
 	</script>
